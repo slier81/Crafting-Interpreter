@@ -3,18 +3,18 @@ package com.craftinginterpreters.lox;
 public class Token {
     final TokenType type;
     final String lexeme;
-    final Object literal;
+    final Object value;
     final int line;
 
-    public Token(TokenType type, String lexeme, Object literal, int line) {
+    public Token(TokenType type, String lexeme, Object value, int line) {
         this.type = type;
         this.lexeme = lexeme;
-        this.literal = literal;
+        this.value = value;
         this.line = line;
     }
 
     public String toString() {
-        return type + " " + lexeme + " " + literal;
+        return type + " " + lexeme + " " + value;
     }
 }
 
