@@ -20,21 +20,32 @@ public class Lox {
         } else {
             runPrompt();
         }
+
+        // Expr expression = new Expr.Binary(
+        //         new Expr.Unary(new Token(TokenType.MINUS, "-", null, 1), new Expr.Literal(123)),
+        //         new Token(TokenType.STAR, "*", null, 1), 
+        //         new Expr.Grouping(new Expr.Literal(45.67))
+        // );
+
+        // System.out.println(new AstPrinter().print(expression));
     }
 
     private static void runFile(String path) throws IOException {
         byte[] bytes = Files.readAllBytes(Paths.get(path));
         run(new String(bytes, Charset.defaultCharset()));
 
-        if (hadError) System.exit(65);
+        if (hadError)
+            System.exit(65);
     }
 
     private static void runPrompt() throws IOException {
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
 
-        for (; ; ) {
-            System.out.println("> ");
+        System.out.println("Welcome to Lox Repl");
+
+        for (;;) {
+            System.out.print(">> ");
             run(reader.readLine());
             hadError = false;
         }

@@ -4,11 +4,9 @@
 package com.craftinginterpreters.lox;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class AppTest {
     @Test public void testAppHasAGreeting() {
-        Lox classUnderTest = new Lox();
-        assertNotNull("app should have a greeting", classUnderTest.getGreeting());
+
     }
 }

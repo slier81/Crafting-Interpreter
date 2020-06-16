@@ -17,4 +17,3 @@ public class Token {
         return type + " " + lexeme + " " + value;
     }
 }
-

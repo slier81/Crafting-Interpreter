@@ -1,9 +1,9 @@
 package com.craftinginterpreters.lox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
 import static com.craftinginterpreters.lox.TokenType.*;
 
 
@@ -41,7 +41,7 @@ public class Scanner {
     }
 
     public List<Token> scanTokens() {
-        while (!isAtEnd()) {
+        while (!this.isAtEnd()) {
             this.lexemePos = this.currentPos;
             this.scanToken();
         }
@@ -51,7 +51,7 @@ public class Scanner {
     }
 
     private void scanToken() {
-        char c = next();
+        char c = walk();
 
         switch (c) {
             case '(' -> addToken(LEFT_PAREN);
@@ -76,7 +76,7 @@ public class Scanner {
             case '/' -> {
                 if (isMatch('/')) {
                     // A comment goes until the end of the line.
-                    while (peek() != '\n' && !isAtEnd()) next();
+                    while (peek() != '\n' && !isAtEnd()) walk();
                 } else {
                     addToken(SLASH);
                 }
@@ -98,7 +98,7 @@ public class Scanner {
     }
 
     private void identifier() {
-        while (isAlphaNumeric(peek())) next();
+        while (isAlphaNumeric(peek())) walk();
 
         String token = this.source.substring(this.lexemePos, this.currentPos);
         TokenType tokenType = Scanner.keywords.get(token);
@@ -113,7 +113,7 @@ public class Scanner {
     private void string() {
         while (peek() != '"' && !isAtEnd()) {
             if (peek() == '\n') this.line++;
-            next();
+            walk();
         }
 
         if (isAtEnd()) {
@@ -121,33 +121,33 @@ public class Scanner {
             return;
         }
 
-        next(); // The closing "
+        walk(); // The closing "
 
         String value = this.source.substring(lexemePos + 1, currentPos - 1); // Trim the surrounding quotes
         this.addToken(STRING, value);
     }
 
     private void number() {
-        while (isDigit(peek())) next();
+        while (isDigit(peek())) walk();
 
         if (peek() == '.' && isDigit(peekNext())) {
-            next(); // Consume the '.'
-            while (isDigit(peek())) next(); // Consume remaining fraction parts
+            walk(); // Consume the '.'
+            while (isDigit(peek())) walk(); // Consume remaining fraction parts
         }
 
         this.addToken(NUMBER, Double.parseDouble(this.source.substring(this.lexemePos, this.currentPos)));
     }
 
     private boolean isMatch(char expected) {
-        if (isAtEnd()) return false;
-        if (this.source.charAt(currentPos) != expected) return false;
+        if (this.isAtEnd()) return false;
+        if (this.source.charAt(this.currentPos) != expected) return false;
 
         this.currentPos++;
         return true;
     }
 
     private char peek() {
-        if (isAtEnd()) return '\0';
+        if (this.isAtEnd()) return '\0';
         return this.source.charAt(this.currentPos);
     }
 
@@ -174,9 +174,9 @@ public class Scanner {
         return this.currentPos >= source.length();
     }
 
-    private char next() {
-        currentPos++;
-        return this.source.charAt(currentPos - 1);
+    private char walk() {
+        this.currentPos++;
+        return this.source.charAt(this.currentPos - 1);
     }
 
     private void addToken(TokenType type) {
@@ -184,7 +184,7 @@ public class Scanner {
     }
 
     private void addToken(TokenType type, Object value) {
-        String token = source.substring(lexemePos, currentPos);
+        String token = this.source.substring(this.lexemePos, this.currentPos);
         this.tokens.add(new Token(type, token, value, this.line));
     }
 }
